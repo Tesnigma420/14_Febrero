@@ -196,31 +196,28 @@
         </div>
 
         <div class="heartsGrid">
-          <div class="heartBtn" data-msg="m1" data-title="Para que quede claro" aria-label="Para que quede claro">
-            <div class="lockBadge">🔒 Bloqueado</div>
+          <div class="heartBtn" data-msg="m1" aria-label="Para que quede claro">
             <div>
               <div class="heartEmoji">💗</div>
               <div style="font-weight:800; margin-top:6px;">Abrir</div>
             </div>
           </div>
 
-          <div class="heartBtn" data-msg="m2" data-title="Lo que admiro de ti" aria-label="Lo que admiro de ti">
-            <div class="lockBadge">🔒 Bloqueado</div>
+          <div class="heartBtn" data-msg="m2" aria-label="Lo que admiro de ti">
             <div>
               <div class="heartEmoji">💖</div>
               <div style="font-weight:800; margin-top:6px;">Abrir</div>
             </div>
           </div>
 
-          <div class="heartBtn" data-msg="m4" data-title="Y sí" aria-label="Y sí">
-            <div class="lockBadge">🔒 Bloqueado</div>
+          <div class="heartBtn" data-msg="m4" aria-label="y si">
             <div>
               <div class="heartEmoji">💘</div>
               <div style="font-weight:800; margin-top:6px;">Abrir</div>
             </div>
           </div>
 
-          <div class="heartBtn big locked" id="bigHeart" data-msg="m3" data-title="Lo importante" aria-label="Lo importante" tabindex="-1">
+          <div class="heartBtn big locked" id="bigHeart" data-msg="m3" aria-label="Lo importante" tabindex="-1">
             <div class="lockBadge">🔒 Se desbloquea al abrir los 3</div>
             <div>
               <div class="heartEmoji" style="font-size:42px;">❤️</div>
@@ -250,7 +247,7 @@
   </div>
 
   <script>
-    // --- Mensajes (edita aquí si quieres) ---
+    // --- Mensajes (no se cambia texto) ---
     const messages = {
       m1: `Aún estamos conociéndonos y, siendo honestos, probablemente seguimos siendo más desconocidos que cercanos…
 pero me gustas bastante más de lo que alcanzas a imaginar.`,
@@ -265,6 +262,14 @@ Tal vez hoy no sea fácil vernos ni darte algo material. Igual voy a encontrar l
 No quiero que esto se quede en palabras. Me interesas de verdad.
 Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volviéndonos cada vez más cercanos.`,
       m4: `Así que sí… te quiero bastante.`
+    };
+
+    // --- Títulos EXACTOS por clave (esto arregla el "Mensaje 1/2") ---
+    const titles = {
+      m1: "Para que quede claro",
+      m2: "Lo que admiro de ti",
+      m3: "Lo importante",
+      m4: "y si"
     };
 
     // --- Navegación de pantallas ---
@@ -330,7 +335,7 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
       burstHearts(10);
     });
 
-    // --- Modal mensajes ---
+    // --- Modal ---
     const modalOverlay = document.getElementById("modalOverlay");
     const modalBody = document.getElementById("modalBody");
     const closeModal = document.getElementById("closeModal");
@@ -350,8 +355,8 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
       if (e.target === modalOverlay) hideModal();
     });
 
-    // --- Títulos bonitos (en vez de "Mensaje 1/2/3") + bloqueo del corazón grande ---
-    const opened = new Set(); // guarda m1, m2, m4
+    // --- Bloqueo del corazón grande ---
+    const opened = new Set(); // m1, m2, m4
     const bigHeart = document.getElementById("bigHeart");
     const hintText = document.getElementById("hintText");
 
@@ -380,17 +385,20 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
       }
     }
 
+    // --- Click en corazones ---
     document.querySelectorAll(".heartBtn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const key = btn.dataset.msg;
-        const title = btn.dataset.title || "Mensaje";
 
-        // Si es el corazón grande y está bloqueado, no abre
+        // Si es el grande y está bloqueado: no abre
         if (key === "m3" && btn.classList.contains("locked")) {
           hintText.textContent = "Primero abre los 3 corazones pequeños 🙂";
           burstHearts(6);
           return;
         }
+
+        // Título fijo por clave
+        const title = titles[key] || "Mensaje";
 
         openModal(title, messages[key] || "Mensaje no encontrado. (Ese sí fue bug).");
 
@@ -423,7 +431,6 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
       }
     }
 
-    // Un poquito de ambiente al cargar
     burstHearts(10);
   </script>
 </body>
