@@ -30,7 +30,7 @@
       box-shadow: 0 12px 50px rgba(0,0,0,.35);
     }
     h1{ margin:0 0 8px; font-size:24px; }
-    p{ margin:10px 0; line-height:1.55; color:var(--muted); }
+    p{ margin:10px 0; line-height:1.55; color:var(--muted); white-space:pre-line; }
     .center{ text-align:center; }
     .btns{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
     button{
@@ -67,6 +67,7 @@
       font-weight:800;
       letter-spacing:.5px;
       color: rgba(255,255,255,.9);
+      white-space:pre-line;
     }
 
     /* Hearts grid */
@@ -146,7 +147,7 @@
     <div class="card">
       <!-- SCREEN 1 -->
       <section class="screen active center" id="s1">
-        <h1>Bienvenida a un cachito de mi corazón</h1>
+        <h1>Bienvenida, Dulce, a un cachito de mi corazón</h1>
         <p>Esto es un mini-experimento romántico hecho con código. Sin bugs… (bueno, casi).</p>
         <div class="btns">
           <button id="startBtn">Empezar</button>
@@ -221,17 +222,26 @@
         <div class="modalTitle" id="modalTitle">Mensaje</div>
         <button class="closeBtn" id="closeModal">Cerrar</button>
       </div>
-      <p id="modalBody" style="color: rgba(255,255,255,.88); margin:0;"></p>
+      <p id="modalBody" style="color: rgba(255,255,255,.88); margin:0; white-space:pre-line;"></p>
     </div>
   </div>
 
   <script>
     // --- Mensajes (edita aquí si quieres) ---
     const messages = {
-      m1: "Tal vez no nos conozcamos bien aún y tal vez seamos más desconocidos que conocidos, pero me gustas más de lo que pudieras creer.",
-      m2: "Me gusta tu determinación, tu pasión y tus ganas de salir adelante. Eres una persona súper trabajadora y comprometida; me encanta eso y quiero eso en mi vida.",
-      m3: "Sé que aún no nos hemos visto en persona y sé que vamos a un ritmo “lento”, pero estoy feliz de tener la oportunidad de conocer a una persona tan increíble que verdaderamente me hace sentir bonito en mi corazón.\n\nTal vez no tenga ahorita la oportunidad de comprarte un regalo o no haya la facilidad de vernos para hacer algo en este día, pero incluso sin recursos siempre buscaré la manera de hacerte sonreír.\n\nMe gusta ser romántico y quiero demostrarte que no han sido solo palabras, que verdaderamente me interesas bien. Quiero hacer las cosas bien y quiero que sigamos avanzando, conociéndonos y siendo más cercanos.",
-      m4: "Así que sí… se podría decir que te quiero bastante."
+      m1: `Aún estamos conociéndonos y, siendo honestos, probablemente seguimos siendo más desconocidos que cercanos…
+pero me gustas bastante más de lo que alcanzas a imaginar.`,
+      m2: `Admiro tu determinación, tu pasión y la forma en que te tomas en serio tu camino.
+Eres una persona trabajadora, constante y comprometida… y eso no solo me gusta, también es el tipo de energía que quiero cerca en mi vida.`,
+      m3: `Aún no nos hemos visto en persona y vamos con calma… y aun así, me alegra genuinamente tener la oportunidad de conocerte.
+
+Me haces sentir bien, de una forma tranquila y honesta.
+
+Tal vez hoy no tenga la facilidad de verte ni de darte algo material, pero incluso sin eso siempre voy a buscar la manera de provocarte una sonrisa.
+
+No quiero que esto se quede en palabras. Me interesas de verdad.
+Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volviéndonos cada vez más cercanos.`,
+      m4: `Así que sí… te quiero bastante.`
     };
 
     // --- Navegación de pantallas ---
@@ -272,9 +282,16 @@
         if (t <= 0){
           clearInterval(timer);
           nextBtn.disabled = false;
+
+          // Mensaje 1: "Listo 😌" por un momento
           countText.textContent = "Listo 😌";
           // barra vacía al final
           barFill.style.transform = "scaleX(0)";
+
+          // Mensaje 2: cambia automáticamente
+          setTimeout(() => {
+            countText.textContent = "Probablemente mas de lo que pudieras pensar.";
+          }, 650);
         }
       }, 1000);
     }
