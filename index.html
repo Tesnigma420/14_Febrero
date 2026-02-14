@@ -6,8 +6,8 @@
   <title>Un cachito de mi corazón</title>
   <style>
     :root{
-      --bg1:#2b0f1a;
-      --bg2:#7b1e3f;
+      --bg1:#2a0f12;   /* base oscura cálida */
+      --bg2:#ff7a59;   /* naranja amanecer */
       --card:rgba(255,255,255,.08);
       --border:rgba(255,255,255,.18);
       --text:rgba(255,255,255,.95);
@@ -17,8 +17,11 @@
     body{
       margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
       color:var(--text);
-      background: radial-gradient(circle at top, #a8325f, #2b0f1a);
-      overflow:hidden;
+      background:
+      radial-gradient(circle at 20% 10%, rgba(255,198,120,.55), transparent 55%),
+      radial-gradient(circle at 80% 0%, rgba(255,122,89,.55), transparent 60%),
+      radial-gradient(circle at top, #ff9d6c, #2a0f12);
+
     }
     .wrap{ width:min(720px, 100%); }
     .card{
