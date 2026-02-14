@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Un cachito de mi corazón</title>
+  <style>
+    :root{
+      --bg1:#0b0b12;
+      --bg2:#1b1b2f;
+      --card:rgba(255,255,255,.07);
+      --border:rgba(255,255,255,.14);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.72);
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    }
+    body{
+      margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
+      color:var(--text);
+      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+      overflow:hidden;
+    }
+    .wrap{ width:min(720px, 100%); }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:22px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 50px rgba(0,0,0,.35);
+    }
+    h1{ margin:0 0 8px; font-size:24px; }
+    p{ margin:10px 0; line-height:1.55; color:var(--muted); }
+    .center{ text-align:center; }
+    .btns{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+    button{
+      border:0; border-radius:12px; padding:12px 14px; cursor:pointer;
+      background: rgba(255,255,255,.13);
+      color: var(--text);
+      font-weight:700;
+    }
+    button:hover{ background: rgba(255,255,255,.18); }
+    button:disabled{ opacity:.5; cursor:not-allowed; }
+
+    /* Screens */
+    .screen{ display:none; }
+    .screen.active{ display:block; animation: fadeIn .25s ease; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+
+    /* Timer + bar */
+    .timerBox{ margin:16px auto 0; width:min(520px,100%); }
+    .bar{
+      height:10px; border-radius:999px; overflow:hidden;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .bar > div{
+      height:100%;
+      width:100%;
+      transform-origin:left;
+      transform: scaleX(1);
+      background: rgba(255,255,255,.55);
+      transition: transform 1s linear;
+    }
+    .count{
+      margin-top:10px;
+      font-weight:800;
+      letter-spacing:.5px;
+      color: rgba(255,255,255,.9);
+    }
+
+    /* Hearts grid */
+    .heartsGrid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    @media (max-width:560px){
+      .heartsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .heartBtn{
+      position:relative;
+      border-radius:16px;
+      padding:16px 12px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      cursor:pointer;
+      text-align:center;
+      user-select:none;
+      min-height:92px;
+      display:grid;
+      place-items:center;
+      transition: transform .08s ease, background .15s ease;
+    }
+    .heartBtn:hover{ background: rgba(255,255,255,.12); }
+    .heartBtn:active{ transform: scale(.98); }
+    .heartEmoji{ font-size:34px; }
+    .big{ grid-column: 1 / -1; min-height:110px; }
+    .hint{ font-size:12px; color: rgba(255,255,255,.65); margin-top:10px; text-align:center; }
+
+    /* Modal */
+    .modalOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .modalOverlay.show{ display:flex; }
+    .modal{
+      width:min(720px, 100%);
+      background: rgba(20,20,34,.92);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:18px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.5);
+    }
+    .modalTop{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .modalTitle{ font-weight:900; }
+    .closeBtn{ padding:10px 12px; border-radius:12px; }
+
+    /* Floating hearts background */
+    .floatWrap{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+    .floatHeart{
+      position:absolute; bottom:-40px;
+      font-size:18px;
+      opacity:.75;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
+      animation: floatUp linear forwards;
+    }
+    @keyframes floatUp{
+      to{ transform: translateY(-120vh) translateX(var(--dx)); opacity:0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="floatWrap" id="floatWrap"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <!-- SCREEN 1 -->
+      <section class="screen active center" id="s1">
+        <h1>Bienvenida a un cachito de mi corazón</h1>
+        <p>Esto es un mini-experimento romántico hecho con código. Sin bugs… (bueno, casi).</p>
+        <div class="btns">
+          <button id="startBtn">Empezar</button>
+        </div>
+      </section>
+
+      <!-- SCREEN 2 -->
+      <section class="screen center" id="s2">
+        <h1>¿Qué tanto crees que me gustas?</h1>
+        <p>Piensa una respuesta… el programa necesita 5 segundos para procesar sentimientos.</p>
+
+        <div class="timerBox">
+          <div class="bar"><div id="barFill"></div></div>
+          <div class="count" id="countText">5</div>
+        </div>
+
+        <div class="btns">
+          <button id="nextBtn" disabled>Siguiente</button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3 -->
+      <section class="screen" id="s3">
+        <div class="center">
+          <h1>Ok. Resultados listos ✅</h1>
+          <p>Toca los corazones. Cada uno tiene un mensaje dentro.</p>
+        </div>
+
+        <div class="heartsGrid">
+          <div class="heartBtn" data-msg="m1" aria-label="Mensaje 1">
+            <div>
+              <div class="heartEmoji">💗</div>
+              <div style="font-weight:800; margin-top:6px;">Abrir</div>
+            </div>
+          </div>
+
+          <div class="heartBtn" data-msg="m2" aria-label="Mensaje 2">
+            <div>
+              <div class="heartEmoji">💖</div>
+              <div style="font-weight:800; margin-top:6px;">Abrir</div>
+            </div>
+          </div>
+
+          <div class="heartBtn" data-msg="m4" aria-label="Mensaje final corto">
+            <div>
+              <div class="heartEmoji">💘</div>
+              <div style="font-weight:800; margin-top:6px;">Abrir</div>
+            </div>
+          </div>
+
+          <div class="heartBtn big" data-msg="m3" aria-label="Mensaje grande">
+            <div>
+              <div class="heartEmoji" style="font-size:42px;">❤️</div>
+              <div style="font-weight:900; margin-top:6px;">El corazón grande</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint">Tip: si vuelves a tocar, no explota. Solo se pone más romántico.</div>
+
+        <div class="btns" style="margin-top:16px;">
+          <button id="restartBtn">Volver al inicio</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modalOverlay" id="modalOverlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modalTop">
+        <div class="modalTitle" id="modalTitle">Mensaje</div>
+        <button class="closeBtn" id="closeModal">Cerrar</button>
+      </div>
+      <p id="modalBody" style="color: rgba(255,255,255,.88); margin:0;"></p>
+    </div>
+  </div>
+
+  <script>
+    // --- Mensajes (edita aquí si quieres) ---
+    const messages = {
+      m1: "Tal vez no nos conozcamos bien aún y tal vez seamos más desconocidos que conocidos, pero me gustas más de lo que pudieras creer.",
+      m2: "Me gusta tu determinación, tu pasión y tus ganas de salir adelante. Eres una persona súper trabajadora y comprometida; me encanta eso y quiero eso en mi vida.",
+      m3: "Sé que aún no nos hemos visto en persona y sé que vamos a un ritmo “lento”, pero estoy feliz de tener la oportunidad de conocer a una persona tan increíble que verdaderamente me hace sentir bonito en mi corazón.\n\nTal vez no tenga ahorita la oportunidad de comprarte un regalo o no haya la facilidad de vernos para hacer algo en este día, pero incluso sin recursos siempre buscaré la manera de hacerte sonreír.\n\nMe gusta ser romántico y quiero demostrarte que no han sido solo palabras, que verdaderamente me interesas bien. Quiero hacer las cosas bien y quiero que sigamos avanzando, conociéndonos y siendo más cercanos.",
+      m4: "Así que sí… se podría decir que te quiero bastante."
+    };
+
+    // --- Navegación de pantallas ---
+    const screens = ["s1","s2","s3"].map(id => document.getElementById(id));
+    const s1 = document.getElementById("s1");
+    const s2 = document.getElementById("s2");
+    const s3 = document.getElementById("s3");
+
+    function show(screenEl){
+      screens.forEach(s => s.classList.remove("active"));
+      screenEl.classList.add("active");
+    }
+
+    // --- Timer ---
+    const startBtn = document.getElementById("startBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const countText = document.getElementById("countText");
+    const barFill = document.getElementById("barFill");
+
+    let timer = null;
+    function startCountdown(seconds=5){
+      clearInterval(timer);
+      nextBtn.disabled = true;
+
+      let t = seconds;
+      countText.textContent = t;
+
+      // barra llena al inicio
+      barFill.style.transform = "scaleX(1)";
+
+      // Cada segundo reduce
+      timer = setInterval(() => {
+        t--;
+        countText.textContent = t;
+        const ratio = t / seconds;
+        barFill.style.transform = `scaleX(${Math.max(0, ratio)})`;
+
+        if (t <= 0){
+          clearInterval(timer);
+          nextBtn.disabled = false;
+          countText.textContent = "Listo 😌";
+          // barra vacía al final
+          barFill.style.transform = "scaleX(0)";
+        }
+      }, 1000);
+    }
+
+    startBtn.addEventListener("click", () => {
+      show(s2);
+      startCountdown(5);
+      burstHearts(18);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      show(s3);
+      burstHearts(22);
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      show(s1);
+      burstHearts(10);
+    });
+
+    // --- Modal mensajes ---
+    const modalOverlay = document.getElementById("modalOverlay");
+    const modalBody = document.getElementById("modalBody");
+    const closeModal = document.getElementById("closeModal");
+
+    function openModal(title, text){
+      document.getElementById("modalTitle").textContent = title;
+      modalBody.textContent = text;
+      modalOverlay.classList.add("show");
+      burstHearts(14);
+    }
+    function hideModal(){
+      modalOverlay.classList.remove("show");
+    }
+
+    closeModal.addEventListener("click", hideModal);
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) hideModal();
+    });
+
+    document.querySelectorAll(".heartBtn").forEach((btn, idx) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.msg;
+        const title =
+          key === "m3" ? "El corazón grande" :
+          key === "m4" ? "Una cosa más..." :
+          `Mensaje ${idx+1}`;
+        openModal(title, messages[key] || "Mensaje no encontrado. (Ese sí fue bug).");
+      });
+    });
+
+    // --- Corazones flotando (fondo) ---
+    const floatWrap = document.getElementById("floatWrap");
+
+    function spawnHeart(){
+      const h = document.createElement("div");
+      h.className = "floatHeart";
+      h.textContent = Math.random() > 0.5 ? "💘" : "💗";
+      h.style.left = (Math.random() * 100) + "vw";
+      h.style.setProperty("--dx", (Math.random()*120 - 60) + "px");
+      const dur = 3000 + Math.random()*2500;
+      h.style.animationDuration = dur + "ms";
+      floatWrap.appendChild(h);
+      setTimeout(() => h.remove(), dur);
+    }
+
+    function burstHearts(n=12){
+      for (let i=0;i<n;i++){
+        setTimeout(spawnHeart, i*60);
+      }
+    }
+
+    // Un poquito de ambiente al cargar
+    burstHearts(10);
+  </script>
+</body>
+</html>
