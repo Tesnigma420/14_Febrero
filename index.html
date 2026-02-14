@@ -92,13 +92,32 @@
       min-height:92px;
       display:grid;
       place-items:center;
-      transition: transform .08s ease, background .15s ease;
+      transition: transform .08s ease, background .15s ease, opacity .15s ease;
     }
     .heartBtn:hover{ background: rgba(255,255,255,.12); }
     .heartBtn:active{ transform: scale(.98); }
     .heartEmoji{ font-size:34px; }
     .big{ grid-column: 1 / -1; min-height:110px; }
     .hint{ font-size:12px; color: rgba(255,255,255,.65); margin-top:10px; text-align:center; }
+
+    /* Locked heart */
+    .heartBtn.locked{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+    .heartBtn.locked:hover{ background: rgba(255,255,255,.08); }
+    .lockBadge{
+      position:absolute;
+      top:10px; right:10px;
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.16);
+      color: rgba(255,255,255,.85);
+      display:none;
+    }
+    .heartBtn.locked .lockBadge{ display:inline-block; }
 
     /* Modal */
     .modalOverlay{
@@ -177,28 +196,32 @@
         </div>
 
         <div class="heartsGrid">
-          <div class="heartBtn" data-msg="m1" aria-label="Para que quede claro">
+          <div class="heartBtn" data-msg="m1" data-title="Para que quede claro" aria-label="Para que quede claro">
+            <div class="lockBadge">🔒 Bloqueado</div>
             <div>
               <div class="heartEmoji">💗</div>
               <div style="font-weight:800; margin-top:6px;">Abrir</div>
             </div>
           </div>
 
-          <div class="heartBtn" data-msg="m2" aria-label="Lo que admiro de ti">
+          <div class="heartBtn" data-msg="m2" data-title="Lo que admiro de ti" aria-label="Lo que admiro de ti">
+            <div class="lockBadge">🔒 Bloqueado</div>
             <div>
               <div class="heartEmoji">💖</div>
               <div style="font-weight:800; margin-top:6px;">Abrir</div>
             </div>
           </div>
 
-          <div class="heartBtn" data-msg="m4" aria-label="Y sí">
+          <div class="heartBtn" data-msg="m4" data-title="Y sí" aria-label="Y sí">
+            <div class="lockBadge">🔒 Bloqueado</div>
             <div>
               <div class="heartEmoji">💘</div>
               <div style="font-weight:800; margin-top:6px;">Abrir</div>
             </div>
           </div>
 
-          <div class="heartBtn big" data-msg="m3" aria-label="Lo importante">
+          <div class="heartBtn big locked" id="bigHeart" data-msg="m3" data-title="Lo importante" aria-label="Lo importante" tabindex="-1">
+            <div class="lockBadge">🔒 Se desbloquea al abrir los 3</div>
             <div>
               <div class="heartEmoji" style="font-size:42px;">❤️</div>
               <div style="font-weight:900; margin-top:6px;">El corazón grande</div>
@@ -206,7 +229,7 @@
           </div>
         </div>
 
-        <div class="hint">Tip: si vuelves a tocar, no explota. Solo se pone más romántico.</div>
+        <div class="hint" id="hintText">Tip: abre los 3 corazones primero para desbloquear el grande.</div>
 
         <div class="btns" style="margin-top:16px;">
           <button id="restartBtn">Volver al inicio</button>
@@ -268,11 +291,8 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
 
       let t = seconds;
       countText.textContent = t;
-
-      // barra llena al inicio
       barFill.style.transform = "scaleX(1)";
 
-      // Cada segundo reduce
       timer = setInterval(() => {
         t--;
         countText.textContent = t;
@@ -283,12 +303,9 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
           clearInterval(timer);
           nextBtn.disabled = false;
 
-          // Mensaje 1: "Listo 😌" por un momento
           countText.textContent = "Listo 😌";
-          // barra vacía al final
           barFill.style.transform = "scaleX(0)";
 
-          // Mensaje 2: cambia automáticamente
           setTimeout(() => {
             countText.textContent = "Probablemente más de lo que alcanzas a imaginar.";
           }, 650);
@@ -304,6 +321,7 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
 
     nextBtn.addEventListener("click", () => {
       show(s3);
+      resetLockState();
       burstHearts(22);
     });
 
@@ -332,14 +350,55 @@ Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volv
       if (e.target === modalOverlay) hideModal();
     });
 
-    document.querySelectorAll(".heartBtn").forEach((btn, idx) => {
+    // --- Títulos bonitos (en vez de "Mensaje 1/2/3") + bloqueo del corazón grande ---
+    const opened = new Set(); // guarda m1, m2, m4
+    const bigHeart = document.getElementById("bigHeart");
+    const hintText = document.getElementById("hintText");
+
+    function resetLockState(){
+      opened.clear();
+      lockBigHeart(true);
+      hintText.textContent = "Tip: abre los 3 corazones primero para desbloquear el grande.";
+    }
+
+    function lockBigHeart(lock){
+      if (lock){
+        bigHeart.classList.add("locked");
+        bigHeart.setAttribute("tabindex","-1");
+      } else {
+        bigHeart.classList.remove("locked");
+        bigHeart.setAttribute("tabindex","0");
+      }
+    }
+
+    function checkUnlock(){
+      const ok = opened.has("m1") && opened.has("m2") && opened.has("m4");
+      if (ok){
+        lockBigHeart(false);
+        hintText.textContent = "Desbloqueado ✅ Ahora sí, abre el corazón grande.";
+        burstHearts(18);
+      }
+    }
+
+    document.querySelectorAll(".heartBtn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const key = btn.dataset.msg;
-        const title =
-          key === "m3" ? "El corazón grande" :
-          key === "m4" ? "Una cosa más..." :
-          `Mensaje ${idx+1}`;
+        const title = btn.dataset.title || "Mensaje";
+
+        // Si es el corazón grande y está bloqueado, no abre
+        if (key === "m3" && btn.classList.contains("locked")) {
+          hintText.textContent = "Primero abre los 3 corazones pequeños 🙂";
+          burstHearts(6);
+          return;
+        }
+
         openModal(title, messages[key] || "Mensaje no encontrado. (Ese sí fue bug).");
+
+        // Marca como abierto si es uno de los 3 pequeños
+        if (key === "m1" || key === "m2" || key === "m4") {
+          opened.add(key);
+          checkUnlock();
+        }
       });
     });
 
