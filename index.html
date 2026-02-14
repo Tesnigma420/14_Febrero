@@ -6,18 +6,18 @@
   <title>Un cachito de mi corazón</title>
   <style>
     :root{
-      --bg1:#0b0b12;
-      --bg2:#1b1b2f;
-      --card:rgba(255,255,255,.07);
-      --border:rgba(255,255,255,.14);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.72);
+      --bg1:#2b0f1a;
+      --bg2:#7b1e3f;
+      --card:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.18);
+      --text:rgba(255,255,255,.95);
+      --muted:rgba(255,255,255,.80);
       font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
     }
     body{
       margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
       color:var(--text);
-      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+      background: radial-gradient(circle at top, #a8325f, #2b0f1a);
       overflow:hidden;
     }
     .wrap{ width:min(720px, 100%); }
@@ -26,8 +26,8 @@
       border:1px solid var(--border);
       border-radius:18px;
       padding:22px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 12px 50px rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 15px 60px rgba(0,0,0,.45);
     }
     h1{ margin:0 0 8px; font-size:24px; }
     p{ margin:10px 0; line-height:1.55; color:var(--muted); white-space:pre-line; }
@@ -35,42 +35,39 @@
     .btns{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
     button{
       border:0; border-radius:12px; padding:12px 14px; cursor:pointer;
-      background: rgba(255,255,255,.13);
+      background: rgba(255,255,255,.18);
       color: var(--text);
       font-weight:700;
     }
-    button:hover{ background: rgba(255,255,255,.18); }
+    button:hover{ background: rgba(255,255,255,.28); }
     button:disabled{ opacity:.5; cursor:not-allowed; }
 
-    /* Screens */
     .screen{ display:none; }
     .screen.active{ display:block; animation: fadeIn .25s ease; }
     @keyframes fadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
 
-    /* Timer + bar */
     .timerBox{ margin:16px auto 0; width:min(520px,100%); }
     .bar{
       height:10px; border-radius:999px; overflow:hidden;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.20);
     }
     .bar > div{
       height:100%;
       width:100%;
       transform-origin:left;
       transform: scaleX(1);
-      background: rgba(255,255,255,.55);
+      background: rgba(255,255,255,.75);
       transition: transform 1s linear;
     }
     .count{
       margin-top:10px;
       font-weight:800;
       letter-spacing:.5px;
-      color: rgba(255,255,255,.9);
+      color: rgba(255,255,255,.95);
       white-space:pre-line;
     }
 
-    /* Hearts grid */
     .heartsGrid{
       margin-top:18px;
       display:grid;
@@ -84,8 +81,8 @@
       position:relative;
       border-radius:16px;
       padding:16px 12px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
       cursor:pointer;
       text-align:center;
       user-select:none;
@@ -94,18 +91,17 @@
       place-items:center;
       transition: transform .08s ease, background .15s ease, opacity .15s ease;
     }
-    .heartBtn:hover{ background: rgba(255,255,255,.12); }
+    .heartBtn:hover{ background: rgba(255,255,255,.20); }
     .heartBtn:active{ transform: scale(.98); }
     .heartEmoji{ font-size:34px; }
     .big{ grid-column: 1 / -1; min-height:110px; }
-    .hint{ font-size:12px; color: rgba(255,255,255,.65); margin-top:10px; text-align:center; }
+    .hint{ font-size:12px; color: rgba(255,255,255,.75); margin-top:10px; text-align:center; }
 
-    /* Locked heart */
     .heartBtn.locked{
       opacity:.55;
       cursor:not-allowed;
     }
-    .heartBtn.locked:hover{ background: rgba(255,255,255,.08); }
+    .heartBtn.locked:hover{ background: rgba(255,255,255,.12); }
     .lockBadge{
       position:absolute;
       top:10px; right:10px;
@@ -114,12 +110,11 @@
       border-radius:999px;
       background: rgba(0,0,0,.25);
       border: 1px solid rgba(255,255,255,.16);
-      color: rgba(255,255,255,.85);
+      color: rgba(255,255,255,.9);
       display:none;
     }
     .heartBtn.locked .lockBadge{ display:inline-block; }
 
-    /* Modal */
     .modalOverlay{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -131,11 +126,11 @@
     .modalOverlay.show{ display:flex; }
     .modal{
       width:min(720px, 100%);
-      background: rgba(20,20,34,.92);
-      border:1px solid rgba(255,255,255,.18);
+      background: rgba(40,20,35,.95);
+      border:1px solid rgba(255,255,255,.20);
       border-radius:18px;
       padding:18px;
-      box-shadow: 0 20px 70px rgba(0,0,0,.5);
+      box-shadow: 0 25px 80px rgba(0,0,0,.6);
     }
     .modalTop{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
@@ -144,7 +139,6 @@
     .modalTitle{ font-weight:900; }
     .closeBtn{ padding:10px 12px; border-radius:12px; }
 
-    /* Floating hearts background */
     .floatWrap{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
     .floatHeart{
       position:absolute; bottom:-40px;
@@ -158,13 +152,13 @@
     }
   </style>
 </head>
-
 <body>
+
   <div class="floatWrap" id="floatWrap"></div>
 
   <div class="wrap">
     <div class="card">
-      <!-- SCREEN 1 -->
+
       <section class="screen active center" id="s1">
         <h1>Bienvenida, Dulce. Esto es un cachito de mi corazón.</h1>
         <p>Es un detalle hecho con código. No para impresionarte… para decirte algo bien.</p>
@@ -173,7 +167,6 @@
         </div>
       </section>
 
-      <!-- SCREEN 2 -->
       <section class="screen center" id="s2">
         <h1>¿Qué tanto crees que me gustas?</h1>
         <p>Piensa una respuesta… Dame 5 segundos. Esto es un procesamiento serio.</p>
@@ -188,7 +181,6 @@
         </div>
       </section>
 
-      <!-- SCREEN 3 -->
       <section class="screen" id="s3">
         <div class="center">
           <h1>Ok. Resultados listos ✅</h1>
@@ -196,33 +188,12 @@
         </div>
 
         <div class="heartsGrid">
-          <div class="heartBtn" data-msg="m1" aria-label="Para que quede claro">
-            <div>
-              <div class="heartEmoji">💗</div>
-              <div style="font-weight:800; margin-top:6px;">Abrir</div>
-            </div>
-          </div>
-
-          <div class="heartBtn" data-msg="m2" aria-label="Lo que admiro de ti">
-            <div>
-              <div class="heartEmoji">💖</div>
-              <div style="font-weight:800; margin-top:6px;">Abrir</div>
-            </div>
-          </div>
-
-          <div class="heartBtn" data-msg="m4" aria-label="y si">
-            <div>
-              <div class="heartEmoji">💘</div>
-              <div style="font-weight:800; margin-top:6px;">Abrir</div>
-            </div>
-          </div>
-
-          <div class="heartBtn big locked" id="bigHeart" data-msg="m3" aria-label="Lo importante" tabindex="-1">
+          <div class="heartBtn" data-msg="m1"><div><div class="heartEmoji">💗</div><div style="font-weight:800;margin-top:6px;">Abrir</div></div></div>
+          <div class="heartBtn" data-msg="m2"><div><div class="heartEmoji">💖</div><div style="font-weight:800;margin-top:6px;">Abrir</div></div></div>
+          <div class="heartBtn" data-msg="m4"><div><div class="heartEmoji">💘</div><div style="font-weight:800;margin-top:6px;">Abrir</div></div></div>
+          <div class="heartBtn big locked" id="bigHeart" data-msg="m3">
             <div class="lockBadge">🔒 Se desbloquea al abrir los 3</div>
-            <div>
-              <div class="heartEmoji" style="font-size:42px;">❤️</div>
-              <div style="font-weight:900; margin-top:6px;">El corazón grande</div>
-            </div>
+            <div><div class="heartEmoji" style="font-size:42px;">❤️</div><div style="font-weight:900;margin-top:6px;">El corazón grande</div></div>
           </div>
         </div>
 
@@ -232,28 +203,17 @@
           <button id="restartBtn">Volver al inicio</button>
         </div>
       </section>
+
     </div>
   </div>
 
-  <!-- MODAL -->
-  <div class="modalOverlay" id="modalOverlay" role="dialog" aria-modal="true">
-    <div class="modal">
-      <div class="modalTop">
-        <div class="modalTitle" id="modalTitle">Mensaje</div>
-        <button class="closeBtn" id="closeModal">Cerrar</button>
-      </div>
-      <p id="modalBody" style="color: rgba(255,255,255,.88); margin:0; white-space:pre-line;"></p>
-    </div>
-  </div>
-
-  <script>
-    // --- Mensajes (no se cambia texto) ---
-    const messages = {
-      m1: `Aún estamos conociéndonos y, siendo honestos, probablemente seguimos siendo más desconocidos que cercanos…
+<script>
+const messages = {
+m1:`Aún estamos conociéndonos y, siendo honestos, probablemente seguimos siendo más desconocidos que cercanos…
 pero me gustas bastante más de lo que alcanzas a imaginar.`,
-      m2: `Admiro tu determinación, tu pasión y la forma en que te tomas en serio tu camino.
+m2:`Admiro tu determinación, tu pasión y la forma en que te tomas en serio tu camino.
 Eres una persona trabajadora, constante y comprometida… y eso no solo me gusta, también es el tipo de energía que quiero cerca en mi vida.`,
-      m3: `Aún no nos hemos visto en persona y vamos con calma… y aun así, me alegra genuinamente tener la oportunidad de conocerte.
+m3:`Aún no nos hemos visto en persona y vamos con calma… y aun así, me alegra genuinamente tener la oportunidad de conocerte.
 
 Me haces sentir bien, de una forma tranquila y honesta.
 
@@ -261,177 +221,81 @@ Tal vez hoy no sea fácil vernos ni darte algo material. Igual voy a encontrar l
 
 No quiero que esto se quede en palabras. Me interesas de verdad.
 Quiero hacer las cosas bien… y seguir avanzando contigo, conociéndonos y volviéndonos cada vez más cercanos.`,
-      m4: `Así que sí… te quiero bastante.`
-    };
+m4:`Así que sí… te quiero bastante.`
+};
 
-    // --- Títulos EXACTOS por clave (esto arregla el "Mensaje 1/2") ---
-    const titles = {
-      m1: "Para que quede claro",
-      m2: "Lo que admiro de ti",
-      m3: "Lo importante",
-      m4: "y si"
-    };
+const titles={
+m1:"Para que quede claro",
+m2:"Lo que admiro de ti",
+m3:"Lo importante",
+m4:"y si"
+};
 
-    // --- Navegación de pantallas ---
-    const screens = ["s1","s2","s3"].map(id => document.getElementById(id));
-    const s1 = document.getElementById("s1");
-    const s2 = document.getElementById("s2");
-    const s3 = document.getElementById("s3");
+const screens=["s1","s2","s3"].map(id=>document.getElementById(id));
+function show(el){screens.forEach(s=>s.classList.remove("active"));el.classList.add("active");}
 
-    function show(screenEl){
-      screens.forEach(s => s.classList.remove("active"));
-      screenEl.classList.add("active");
-    }
+const startBtn=document.getElementById("startBtn");
+const nextBtn=document.getElementById("nextBtn");
+const countText=document.getElementById("countText");
+const barFill=document.getElementById("barFill");
 
-    // --- Timer ---
-    const startBtn = document.getElementById("startBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const countText = document.getElementById("countText");
-    const barFill = document.getElementById("barFill");
+let timer=null;
+function startCountdown(seconds=5){
+clearInterval(timer);
+nextBtn.disabled=true;
+let t=seconds;
+countText.textContent=t;
+barFill.style.transform="scaleX(1)";
+timer=setInterval(()=>{
+t--;
+countText.textContent=t;
+barFill.style.transform=`scaleX(${Math.max(0,t/seconds)})`;
+if(t<=0){
+clearInterval(timer);
+nextBtn.disabled=false;
+countText.textContent="Listo 😌";
+barFill.style.transform="scaleX(0)";
+setTimeout(()=>{countText.textContent="Probablemente más de lo que alcanzas a imaginar.";},650);
+}
+},1000);
+}
 
-    let timer = null;
-    function startCountdown(seconds=5){
-      clearInterval(timer);
-      nextBtn.disabled = true;
+startBtn.onclick=()=>{show(document.getElementById("s2"));startCountdown();};
+nextBtn.onclick=()=>{show(document.getElementById("s3"));resetLockState();};
 
-      let t = seconds;
-      countText.textContent = t;
-      barFill.style.transform = "scaleX(1)";
+const modalOverlay=document.getElementById("modalOverlay");
+const modalBody=document.getElementById("modalBody");
+const modalTitle=document.getElementById("modalTitle");
 
-      timer = setInterval(() => {
-        t--;
-        countText.textContent = t;
-        const ratio = t / seconds;
-        barFill.style.transform = `scaleX(${Math.max(0, ratio)})`;
+function openModal(key){
+modalTitle.textContent=titles[key];
+modalBody.textContent=messages[key];
+modalOverlay.classList.add("show");
+}
 
-        if (t <= 0){
-          clearInterval(timer);
-          nextBtn.disabled = false;
+function resetLockState(){
+opened.clear();
+lockBigHeart(true);
+}
 
-          countText.textContent = "Listo 😌";
-          barFill.style.transform = "scaleX(0)";
+const opened=new Set();
+const bigHeart=document.getElementById("bigHeart");
 
-          setTimeout(() => {
-            countText.textContent = "Probablemente más de lo que alcanzas a imaginar.";
-          }, 650);
-        }
-      }, 1000);
-    }
+function lockBigHeart(lock){
+if(lock){bigHeart.classList.add("locked");}
+else{bigHeart.classList.remove("locked");}
+}
 
-    startBtn.addEventListener("click", () => {
-      show(s2);
-      startCountdown(5);
-      burstHearts(18);
-    });
+document.querySelectorAll(".heartBtn").forEach(btn=>{
+btn.onclick=()=>{
+const key=btn.dataset.msg;
+if(key==="m3" && btn.classList.contains("locked")) return;
+openModal(key);
+if(key!=="m3"){opened.add(key);}
+if(opened.has("m1")&&opened.has("m2")&&opened.has("m4")) lockBigHeart(false);
+};
+});
+</script>
 
-    nextBtn.addEventListener("click", () => {
-      show(s3);
-      resetLockState();
-      burstHearts(22);
-    });
-
-    document.getElementById("restartBtn").addEventListener("click", () => {
-      show(s1);
-      burstHearts(10);
-    });
-
-    // --- Modal ---
-    const modalOverlay = document.getElementById("modalOverlay");
-    const modalBody = document.getElementById("modalBody");
-    const closeModal = document.getElementById("closeModal");
-
-    function openModal(title, text){
-      document.getElementById("modalTitle").textContent = title;
-      modalBody.textContent = text;
-      modalOverlay.classList.add("show");
-      burstHearts(14);
-    }
-    function hideModal(){
-      modalOverlay.classList.remove("show");
-    }
-
-    closeModal.addEventListener("click", hideModal);
-    modalOverlay.addEventListener("click", (e) => {
-      if (e.target === modalOverlay) hideModal();
-    });
-
-    // --- Bloqueo del corazón grande ---
-    const opened = new Set(); // m1, m2, m4
-    const bigHeart = document.getElementById("bigHeart");
-    const hintText = document.getElementById("hintText");
-
-    function resetLockState(){
-      opened.clear();
-      lockBigHeart(true);
-      hintText.textContent = "Tip: abre los 3 corazones primero para desbloquear el grande.";
-    }
-
-    function lockBigHeart(lock){
-      if (lock){
-        bigHeart.classList.add("locked");
-        bigHeart.setAttribute("tabindex","-1");
-      } else {
-        bigHeart.classList.remove("locked");
-        bigHeart.setAttribute("tabindex","0");
-      }
-    }
-
-    function checkUnlock(){
-      const ok = opened.has("m1") && opened.has("m2") && opened.has("m4");
-      if (ok){
-        lockBigHeart(false);
-        hintText.textContent = "Desbloqueado ✅ Ahora sí, abre el corazón grande.";
-        burstHearts(18);
-      }
-    }
-
-    // --- Click en corazones ---
-    document.querySelectorAll(".heartBtn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const key = btn.dataset.msg;
-
-        // Si es el grande y está bloqueado: no abre
-        if (key === "m3" && btn.classList.contains("locked")) {
-          hintText.textContent = "Primero abre los 3 corazones pequeños 🙂";
-          burstHearts(6);
-          return;
-        }
-
-        // Título fijo por clave
-        const title = titles[key] || "Mensaje";
-
-        openModal(title, messages[key] || "Mensaje no encontrado. (Ese sí fue bug).");
-
-        // Marca como abierto si es uno de los 3 pequeños
-        if (key === "m1" || key === "m2" || key === "m4") {
-          opened.add(key);
-          checkUnlock();
-        }
-      });
-    });
-
-    // --- Corazones flotando (fondo) ---
-    const floatWrap = document.getElementById("floatWrap");
-
-    function spawnHeart(){
-      const h = document.createElement("div");
-      h.className = "floatHeart";
-      h.textContent = Math.random() > 0.5 ? "💘" : "💗";
-      h.style.left = (Math.random() * 100) + "vw";
-      h.style.setProperty("--dx", (Math.random()*120 - 60) + "px");
-      const dur = 3000 + Math.random()*2500;
-      h.style.animationDuration = dur + "ms";
-      floatWrap.appendChild(h);
-      setTimeout(() => h.remove(), dur);
-    }
-
-    function burstHearts(n=12){
-      for (let i=0;i<n;i++){
-        setTimeout(spawnHeart, i*60);
-      }
-    }
-
-    burstHearts(10);
-  </script>
 </body>
 </html>
